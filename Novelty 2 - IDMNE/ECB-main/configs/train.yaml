@@ -1,0 +1,58 @@
+DEVICE: cuda:0
+ndomains: 2
+output_path: ./results
+output_name: baseline
+source_iters: 2000
+adapt_iters: 1000
+test_interval: 500
+seed: 1
+warmup: False
+pretrained_models: ./pretrained_models
+lamda: 0.1 # value of lamda for Domain Adaptation (adentropy loss)
+save_models: True
+thresh_ViT: 0.6
+thresh_CNN: 0.9
+
+dataset:
+  method: SSDA # UDA or SSDA
+  data_root: ../Dataset/office31
+  data_label: ./dataset/office31_ssda # ./dataset/domainnet_uda
+  num_workers: 4
+  target_shot: 3 # SSDA: 3 - UDA: 0
+  use_cgct_mask: True
+
+  source:
+    name: webcam
+    batch_size: 26
+  target:
+    name: amazon
+    batch_size: 26
+
+  prep:
+    params:
+      resize_size: 256
+      crop_size: 224
+
+optimizer:
+  lr: 1.0 # learning rate
+  lr_vit: 0.001 # learning rate for ViT branch
+  lr_cnn: 0.01 # learning rate for CNN branch
+  momentum: 0.9
+  weight_decay: 0.0005
+  nesterov: True
+
+Architecture:
+  Backbone: 
+    name_1: vit
+    pretrained_1: 
+    name_2: alexnet
+    pretrained_2: 
+
+  Classifier:
+    name_1: MLP
+    pretrained_F1: 
+    name_2: MLP
+    pretrained_F2: 
+
+percentile: 60
+alpha: 0.9
